@@ -3,6 +3,7 @@ package top.xc27.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -52,10 +53,13 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper,Employee> im
     }
 
     @Override
-    public R<List<Employee>> getPage(Employee employee) {
+    public R<Page<Employee>> getPage(Employee employee) {
         LambdaQueryWrapper<Employee> query = queryWrapper(employee);
         Page<Employee> page = this.page(new Page<>(employee.getPage(), employee.getPageSize()), query);
-        return R.success(page.getRecords());
+        page.getRecords().stream().forEach(el->{
+            el.setPassword("");
+        });
+        return R.success(page);
     }
 
     @Override
@@ -69,6 +73,47 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper,Employee> im
         Employee crtEmployee = crtEmployee(employee,id);
         this.save(crtEmployee);
         return R.success("新增用户成功!");
+    }
+
+    @Override
+    public R<Employee> queryEmployeeById(Long id) {
+        Employee employee = this.getOne(new LambdaQueryWrapper<Employee>()
+                .eq(Employee::getId, id));
+        if(ObjUtil.isEmpty(employee)){
+            throw new MyRuntimeException("没有查询到对应用户信息!");
+        }
+        return R.success(employee);
+    }
+
+    @Override
+    public R<Employee> queryEmployeeById(String id) {
+        Employee employee = this.getOne(new LambdaQueryWrapper<Employee>()
+                .eq(Employee::getId, id));
+        if(ObjUtil.isEmpty(employee)){
+            throw new MyRuntimeException("没有查询到对应用户信息!");
+        }
+        return R.success(employee);
+    }
+
+    @Override
+    public R<String> editEmployee(Employee employee) {
+        Employee emp = new Employee();
+        String id = employee.getId() + "";
+        if(StrUtil.isEmpty(id)){
+            throw new MyRuntimeException("id参数缺失!");
+        }
+        if(StrUtil.isNotBlank(employee.getName())){
+            BeanUtil.copyProperties(employee,emp);
+        }else {
+            Employee data = queryEmployeeById(id).getData();
+            BeanUtil.copyProperties(data,emp);
+            emp.setStatus(employee.getStatus());
+        }
+        if(!this.updateById(emp)){
+            return R.error("修改用户失败!");
+        }else {
+            return R.success("修改用户成功!");
+        }
     }
 
     private Employee crtEmployee(Employee employee,Long id) {
@@ -86,9 +131,10 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper,Employee> im
 
     private LambdaQueryWrapper<Employee> queryWrapper(Employee employee) {
         LambdaQueryWrapper<Employee> query = Wrappers.lambdaQuery();
-        if(StrUtil.isNotBlank(employee.getUsername())){
-            query.eq(Employee::getUsername,employee.getUsername());
+        if(StrUtil.isNotBlank(employee.getName())){
+            query.eq(Employee::getName,employee.getName());
         }
+        query.orderByDesc(Employee::getCreateTime);
         return query;
     }
 }

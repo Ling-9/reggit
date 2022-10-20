@@ -1,8 +1,8 @@
 function getMemberList (params) {
   return $axios({
     url: '/employee/page',
-    method: 'get',
-    params
+    method: 'post',
+    data:{...params}
   })
 }
 
