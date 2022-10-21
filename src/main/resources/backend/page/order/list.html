@@ -217,7 +217,14 @@
         },
         methods: {
           async init () {
-            getOrderDetailPage({ page: this.page, pageSize: this.pageSize, number: this.input || undefined, beginTime: this.beginTime || undefined, endTime: this.endTime || undefined }).then(res => {
+            const params = {
+              page: this.page,
+              pageSize: this.pageSize,
+              number: this.input || undefined,
+              beginTime: this.beginTime || undefined,
+              endTime: this.endTime || undefined
+            }
+            getOrderDetailPage(params).then(res => {
               if (String(res.code) === '1') {
                 this.tableData = res.data.records || []
                 this.counts = res.data.total

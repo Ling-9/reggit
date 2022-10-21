@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.xc27.entity.MyRuntimeException;
 
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
  * 全局异常处理

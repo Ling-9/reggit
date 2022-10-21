@@ -2,8 +2,8 @@
 const getDishPage = (params) => {
   return $axios({
     url: '/dish/page',
-    method: 'get',
-    params
+    method: 'post',
+    data: { ...params }
   })
 }
 

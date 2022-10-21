@@ -2,8 +2,8 @@
 const getCategoryPage = (params) => {
   return $axios({
     url: '/category/page',
-    method: 'get',
-    params
+    method: 'post',
+    data: { ...params }
   })
 }
 

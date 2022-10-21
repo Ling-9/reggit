@@ -2,8 +2,8 @@
 const getSetmealPage = (params) => {
   return $axios({
     url: '/setmeal/page',
-    method: 'get',
-    params
+    method: 'post',
+    data:{...params}
   })
 }
 

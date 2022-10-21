@@ -175,7 +175,11 @@
         },
         methods: {
           async init () {
-            await getCategoryPage({'page': this.page, 'pageSize': this.pageSize}).then(res => {
+            const params = {
+              page: this.page,
+              pageSize: this.pageSize,
+            }
+            await getCategoryPage(params).then(res => {
               if (String(res.code) === '1') {
                 this.tableData = res.data.records
                 this.counts = Number(res.data.total)
@@ -218,7 +222,7 @@
           },
           //删除
           deleteHandle(id) {
-            this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            this.$confirm('此操作将永久删除该菜品, 是否继续?', '提示', {
               'confirmButtonText': '确定',
               'cancelButtonText': '取消',
               'type': 'warning'

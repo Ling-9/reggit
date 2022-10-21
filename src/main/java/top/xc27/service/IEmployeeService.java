@@ -6,7 +6,6 @@ import top.xc27.common.R;
 import top.xc27.entity.Employee;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 public interface IEmployeeService extends IService<Employee> {
 
@@ -16,7 +15,7 @@ public interface IEmployeeService extends IService<Employee> {
 
     R<Page<Employee>> getPage(Employee employee);
 
-    R<String> addEmployee(Employee employee, HttpServletRequest request);
+    R<String> saveEmployee(Employee employee);
 
     R<Employee> queryEmployeeById(Long id);
 

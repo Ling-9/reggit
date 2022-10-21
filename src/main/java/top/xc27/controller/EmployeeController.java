@@ -1,18 +1,14 @@
 package top.xc27.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import top.xc27.common.R;
 import top.xc27.entity.Employee;
-import top.xc27.entity.MyRuntimeException;
 import top.xc27.service.IEmployeeService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -35,8 +31,8 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public R<String> addEmployee(@RequestBody Employee employee, HttpServletRequest request){
-        return employeeService.addEmployee(employee,request);
+    public R<String> saveEmployee(@RequestBody Employee employee){
+        return employeeService.saveEmployee(employee);
     }
 
     @GetMapping("/{id}")
