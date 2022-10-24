@@ -1,5 +1,11 @@
 server:
   port: 8080
+minio:
+  endpoint: http://xc27.top:9090
+  access-key: admin
+  secret-key: ..
+  imageBucketName: picture
+  fileBucketName: file
 spring:
   application:
     name: reggie

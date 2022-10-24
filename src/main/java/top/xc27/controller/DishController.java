@@ -25,4 +25,19 @@ public class DishController {
     public R<Dish> getDishById(@PathVariable Long id){
         return dishService.getDishById(id);
     }
+
+    @PostMapping
+    public R<String> saveDish(@RequestBody Dish dish){
+        return dishService.saveDish(dish);
+    }
+
+    @DeleteMapping
+    public R<String> deleteDish(Long ids){
+        return dishService.deleteDish(ids);
+    }
+
+    @PostMapping("status")
+    public R<String> editDish(){
+        return null;
+    }
 }

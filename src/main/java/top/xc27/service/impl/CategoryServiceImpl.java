@@ -65,7 +65,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         return R.success(this.list(wrapper));
     }
 
-    private Category getCategoryById(Long id){
+    @Override
+    public Category getCategoryById(Long id) {
         return this.getOne(new LambdaQueryWrapper<Category>().eq(Category::getId,id));
     }
 

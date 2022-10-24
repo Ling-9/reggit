@@ -33,6 +33,9 @@ public class Dish extends BaseEntity implements Serializable {
      */
     private Long categoryId;
 
+    @TableField(exist = false)
+    private String categoryName;
+
     /**
      * 菜品价格
      */

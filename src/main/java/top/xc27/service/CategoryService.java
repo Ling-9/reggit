@@ -23,4 +23,6 @@ public interface CategoryService extends IService<Category> {
     R<String> deleteCategory(Long id);
 
     R<List<Category>> getList(Category category);
+
+    Category getCategoryById(Long id);
 }

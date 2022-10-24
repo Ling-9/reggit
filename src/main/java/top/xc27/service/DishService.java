@@ -15,4 +15,8 @@ public interface DishService extends IService<Dish> {
     R<Page<Dish>> getPage(Dish dish);
 
     R<Dish> getDishById(Long id);
+
+    R<String> saveDish(Dish dish);
+
+    R<String> deleteDish(Long ids);
 }
