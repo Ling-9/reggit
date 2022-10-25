@@ -32,13 +32,13 @@ public class DishController {
     }
 
     @DeleteMapping
-    public R<String> deleteDish(Long ids){
+    public R<String> deleteDish(String ids){
         return dishService.deleteDish(ids);
     }
 
     @PostMapping("status")
-    public R<String> editDish(){
-        return null;
+    public R<String> editDishStatus(String ids,Integer status){
+        return dishService.editDishStatus(ids,status);
     }
 
     @PutMapping

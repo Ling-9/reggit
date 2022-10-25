@@ -19,6 +19,8 @@ import top.xc27.service.DishService;
 import top.xc27.mapper.DishMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,24 +78,43 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
     @Override
     @Transactional
-    public R<String> deleteDish(Long ids) {
-        if(null == ids){
+    public R<String> deleteDish(String ids) {
+        if(StrUtil.isEmpty(ids)){
             return R.error("id参数缺失!");
         }
-        Dish data = getDishById(ids).getData();
-        if(ObjUtil.isNotEmpty(data)){
-            data.setIsDeleted(1);
-            if(!this.updateById(data)){
-                return R.error("删除菜品失败!");
+        if(ids.contains(",")){
+            String[] split = ids.split(",");
+            LinkedList<String> lists = new LinkedList<>(Arrays.asList(split));
+            for (String id : lists) {
+                List<DishFlavor> flavors = dishFlavorService.getDishFlavorsById(Long.valueOf(id));
+                for (DishFlavor flavor : flavors) {
+                    flavor.setIsDeleted(1);
+                    if(!dishFlavorService.updateById(flavor)){
+                        throw new RuntimeException("删除对应菜品口味失败!" + flavor.getId());
+                    }
+                }
+                Dish dish = getDishById(Long.valueOf(id)).getData();
+                dish.setIsDeleted(1);
+                if(!this.updateById(dish)){
+                    return R.error("批量删除菜品失败!");
+                }
             }
+        }else {
+            Dish data = getDishById(Long.valueOf(ids)).getData();
+            if(ObjUtil.isNotEmpty(data)){
+                data.setIsDeleted(1);
+                if(!this.updateById(data)){
+                    return R.error("删除菜品失败!");
+                }
+            }
+            List<DishFlavor> dishFlavors = dishFlavorService.getDishFlavorsById(Long.valueOf(ids));
+            dishFlavors.forEach(el->{
+                el.setIsDeleted(1);
+                if(!dishFlavorService.updateById(el)){
+                    throw new RuntimeException("删除对应菜品口味失败!" + el.getId());
+                }
+            });
         }
-        List<DishFlavor> dishFlavors = dishFlavorService.getDishFlavorsById(ids);
-        dishFlavors.forEach(el->{
-            el.setIsDeleted(1);
-            if(!dishFlavorService.updateById(el)){
-                throw new RuntimeException("删除对应菜品口味失败!" + el.getId());
-            }
-        });
         return R.success("删除菜品成功!");
     }
 
@@ -116,11 +137,37 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         return R.success("更新菜品口味成功!");
     }
 
+    @Override
+    public R<String> editDishStatus(String ids,Integer status) {
+        if(StrUtil.isEmpty(ids)){
+            return R.error("id参数缺失!");
+        }
+        if(ids.contains(",")){
+            String[] split = ids.split(",");
+            LinkedList<String> lists = new LinkedList<>(Arrays.asList(split));
+            for (String id : lists) {
+                Dish dish = getDishById(Long.valueOf(id)).getData();
+                dish.setStatus(status);
+                if(!this.updateById(dish)){
+                    return R.error("停售商品失败!");
+                }
+            }
+        }else {
+            Dish dish = getDishById(Long.valueOf(ids)).getData();
+            dish.setStatus(status);
+            if(!this.updateById(dish)){
+                return R.error("停售商品失败!");
+            }
+        }
+        return R.success("停售商品成功!");
+    }
+
     private LambdaQueryWrapper<Dish> queryWrapper(Dish dish) {
         LambdaQueryWrapper<Dish> query = Wrappers.lambdaQuery();
         if(StrUtil.isNotEmpty(dish.getName())){
             query.like(Dish::getName,dish.getName());
         }
+        query.eq(Dish::getIsDeleted,0);
         query.orderByDesc(Dish::getCreateTime);
         return query;
     }
