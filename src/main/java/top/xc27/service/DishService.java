@@ -19,4 +19,6 @@ public interface DishService extends IService<Dish> {
     R<String> saveDish(Dish dish);
 
     R<String> deleteDish(Long ids);
+
+    R<String> editDish(Dish dish);
 }

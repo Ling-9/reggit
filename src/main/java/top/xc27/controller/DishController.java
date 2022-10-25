@@ -40,4 +40,9 @@ public class DishController {
     public R<String> editDish(){
         return null;
     }
+
+    @PutMapping
+    public R<String> editDish(@RequestBody Dish dish){
+        return dishService.editDish(dish);
+    }
 }

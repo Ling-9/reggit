@@ -3,21 +3,18 @@ package top.xc27.entity;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
- * 菜品管理
- * @TableName dish
+ * 菜品口味关系表
+ * @TableName dish_flavor
  */
-@TableName(value ="dish")
+@TableName(value ="dish_flavor")
 @Data
-public class Dish extends BaseEntity implements Serializable {
+public class DishFlavor implements Serializable {
     /**
      * 主键
      */
@@ -26,47 +23,20 @@ public class Dish extends BaseEntity implements Serializable {
     private Long id;
 
     /**
-     * 菜品名称
+     * 菜品
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private Long dishId;
+
+    /**
+     * 口味名称
      */
     private String name;
 
     /**
-     * 菜品分类id
+     * 口味数据list
      */
-    private Long categoryId;
-
-    @TableField(exist = false)
-    private String categoryName;
-
-    /**
-     * 菜品价格
-     */
-    private BigDecimal price;
-
-    /**
-     * 商品码
-     */
-    private String code;
-
-    /**
-     * 图片
-     */
-    private String image;
-
-    /**
-     * 描述信息
-     */
-    private String description;
-
-    /**
-     * 0 停售 1 起售
-     */
-    private Integer status;
-
-    /**
-     * 顺序
-     */
-    private Integer sort;
+    private String value;
 
     /**
      * 创建时间
@@ -101,7 +71,4 @@ public class Dish extends BaseEntity implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
-
-    @TableField(exist = false)
-    private List<DishFlavor> flavors = new ArrayList<>();
 }

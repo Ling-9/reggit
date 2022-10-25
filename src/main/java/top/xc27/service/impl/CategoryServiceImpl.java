@@ -75,7 +75,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         if(null != category.getType()){
             query.eq(Category::getType,category.getType());
         }
-        query.orderByAsc(Category::getSort);
+        query.orderByAsc(Category::getSort).orderByDesc(Category::getUpdateTime);
         return query;
     }
 
