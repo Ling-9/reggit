@@ -1,8 +1,8 @@
-function loginApi(data) {
+function loginApi(params) {
     return $axios({
       'url': '/user/login',
       'method': 'post',
-      data
+      data:{...params}
     })
   }
 

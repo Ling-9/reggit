@@ -22,13 +22,13 @@
         <div id="login" v-loading="loading">
             <div class="divHead">登录</div>
             <div class="divContainer">
-                <el-input placeholder=" 请输入手机号码" v-model="form.phone"  maxlength='20'/></el-input>
+                <el-input placeholder=" 请输入邮箱" v-model="form.email"  maxlength='20'/></el-input>
                 <div class="divSplit"></div>
                 <el-input placeholder=" 请输入验证码" v-model="form.code"  maxlength='20'/></el-input>
                 <span @click='getCode'>获取验证码</span>
             </div>
-            <div class="divMsg" v-if="msgFlag">手机号输入不正确，请重新输入</div>
-            <el-button type="primary" :class="{btnSubmit:1===1,btnNoPhone:!form.phone,btnPhone:form.phone}" @click="btnLogin">登录</el-button>
+            <div class="divMsg" v-if="msgFlag">邮箱输入不正确，请重新输入</div>
+            <el-button type="primary" :class="{btnSubmit:1===1,btnNoPhone:!form.email,btnPhone:form.email}" @click="btnLogin">登录</el-button>
         </div>
         <!-- 开发环境版本，包含了有帮助的命令行警告 -->
         <script src="../../backend/plugins/vue/vue.js"></script>
@@ -47,7 +47,7 @@
             data(){
                 return {
                     form:{
-                        phone:'',
+                        email:'2803323208@qq.com',
                         code:''
                     },
                     msgFlag:false,
@@ -60,29 +60,44 @@
             methods:{
                 getCode(){
                     this.form.code = ''
-                    const regex = /^(13[0-9]{9})|(15[0-9]{9})|(17[0-9]{9})|(18[0-9]{9})|(19[0-9]{9})$/;
-                    if (regex.test(this.form.phone)) {
+                    const regex =   /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+                    if (regex.test(this.form.email)) {
                         this.msgFlag = false
-                        this.form.code = (Math.random()*1000000).toFixed(0)
+                        axios.post('../../../user/getCode', this.form).then(res => {
+                            if(res.code === 1){
+                                this.$notify({ type:'warning', message:res.data.msg});
+                            }else {
+                                this.$notify({ type:'warning', message:res.data.msg});
+                            }
+                        })
                     }else{
                         this.msgFlag = true
                     }
                 },
                 async btnLogin(){
-                    if(this.form.phone && this.form.code){
-                        this.loading = true
-                        const res = await loginApi({phone:this.form.phone})
-                        this.loading = false
-                        if(res.code === 1){
-                            sessionStorage.setItem("userPhone",this.form.phone)
-                            window.requestAnimationFrame(()=>{
-                                window.location.href= '/front/index.html'
-                            })                           
-                        }else{
-                            this.$notify({ type:'warning', message:res.msg});
+                    if(this.form.email){
+                        if(!this.form.code){
+                            this.$notify({ type:'warning', message:'请输入验证码!'});
+                        }else {
+                            console.log(this.form.email)
+                            console.log(this.form.code)
+                            this.loading = true
+                            axios.post('../../../user/login', this.form).then(res => {
+                                this.loading = false
+                                if(res.code === 1){
+                                    sessionStorage.setItem("userEmail",this.form.email)
+                                    window.requestAnimationFrame(()=>{
+                                        window.location.href= '/front/index.html'
+                                    })
+                                }else{
+                                    this.$notify({ type:'warning', message:res.msg});
+                                }
+                            })
+
+                            // const res = await loginApi({params})
                         }
                     }else{
-                        this.$notify({ type:'warning', message:'请输入手机号码'});
+                        this.$notify({ type:'warning', message:'请输入登录邮箱!'});
                     }
                 }
             }
