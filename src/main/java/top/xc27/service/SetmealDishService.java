@@ -3,6 +3,8 @@ package top.xc27.service;
 import top.xc27.entity.SetmealDish;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
 * @author Administered
 * @description 针对表【setmeal_dish(套餐菜品关系)】的数据库操作Service
@@ -10,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface SetmealDishService extends IService<SetmealDish> {
 
+    List<SetmealDish> getBySetmealId(Long id);
 }

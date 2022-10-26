@@ -15,4 +15,12 @@ public interface SetmealService extends IService<Setmeal> {
     R<Page<Setmeal>> getPage(Setmeal setmeal);
 
     R<String> saveSetmeal(Setmeal setmeal);
+
+    R<Setmeal> getSetmealById(Long id);
+
+    R<String> editSetmeal(Setmeal setmeal);
+
+    R<String> editStatus(String ids, Integer status);
+
+    R<String> deleteSetmeal(String ids);
 }
