@@ -162,10 +162,26 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         return R.success("停售商品成功!");
     }
 
+    @Override
+    public R<List<Dish>> listDishByCategoryId(Dish dish) {
+        if(null == dish.getCategoryId()){
+            return R.error("id参数缺失!");
+        }
+        LambdaQueryWrapper<Dish> queryWrapper = queryWrapper(dish);
+        List<Dish> list = this.list(queryWrapper);
+        return R.success(list);
+    }
+
     private LambdaQueryWrapper<Dish> queryWrapper(Dish dish) {
         LambdaQueryWrapper<Dish> query = Wrappers.lambdaQuery();
         if(StrUtil.isNotEmpty(dish.getName())){
             query.like(Dish::getName,dish.getName());
+        }
+        if(ObjUtil.isNotEmpty(dish.getId())){
+            query.eq(Dish::getId,dish.getId());
+        }
+        if(ObjUtil.isNotEmpty(dish.getCategoryId())){
+            query.eq(Dish::getCategoryId,dish.getCategoryId());
         }
         query.eq(Dish::getIsDeleted,0);
         query.orderByDesc(Dish::getCreateTime);

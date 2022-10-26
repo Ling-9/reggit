@@ -5,6 +5,8 @@ import top.xc27.common.R;
 import top.xc27.entity.Dish;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
 * @author 17108
 * @description 针对表【dish(菜品管理)】的数据库操作Service
@@ -23,4 +25,6 @@ public interface DishService extends IService<Dish> {
     R<String> editDish(Dish dish);
 
     R<String> editDishStatus(String ids,Integer status);
+
+    R<List<Dish>> listDishByCategoryId(Dish dish);
 }

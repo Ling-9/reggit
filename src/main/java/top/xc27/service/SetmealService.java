@@ -13,4 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface SetmealService extends IService<Setmeal> {
 
     R<Page<Setmeal>> getPage(Setmeal setmeal);
+
+    R<String> saveSetmeal(Setmeal setmeal);
 }

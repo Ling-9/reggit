@@ -24,4 +24,9 @@ public class SetmealController {
     public R<Page<Setmeal>> getEmployees(@RequestBody Setmeal setmeal) {
         return setmealService.getPage(setmeal);
     }
+
+    @PostMapping
+    public R<String> saveSetmeal(@RequestBody Setmeal setmeal){
+        return setmealService.saveSetmeal(setmeal);
+    }
 }

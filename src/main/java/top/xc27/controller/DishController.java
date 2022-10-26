@@ -8,6 +8,8 @@ import top.xc27.common.R;
 import top.xc27.entity.Dish;
 import top.xc27.service.DishService;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("dish")
@@ -44,5 +46,10 @@ public class DishController {
     @PutMapping
     public R<String> editDish(@RequestBody Dish dish){
         return dishService.editDish(dish);
+    }
+
+    @GetMapping("list")
+    public R<List<Dish>> listDishByCategoryId(Dish dish){
+        return dishService.listDishByCategoryId(dish);
     }
 }
