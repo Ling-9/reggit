@@ -7,13 +7,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import top.xc27.common.R;
-import top.xc27.entity.MyRuntimeException;
-import top.xc27.entity.Setmeal;
-import top.xc27.entity.SetmealDish;
+import top.xc27.entity.*;
 import top.xc27.service.CategoryService;
+import top.xc27.service.DishService;
 import top.xc27.service.SetmealDishService;
 import top.xc27.service.SetmealService;
 import top.xc27.mapper.SetmealMapper;
@@ -31,14 +31,21 @@ import java.util.stream.Collectors;
 public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> implements SetmealService{
 
     @Autowired
-    CategoryService categoryService;
+    private CategoryService categoryService;
     @Autowired
-    SetmealDishService setmealDishService;
+    private SetmealDishService setmealDishService;
+    @Autowired
+    private DishService dishService;
 
     @Override
     public R<Page<Setmeal>> getPage(Setmeal setmeal) {
         LambdaQueryWrapper<Setmeal> query = queryWrapper(setmeal);
         Page<Setmeal> page = this.page(new Page<>(setmeal.getPage(), setmeal.getPageSize()), query);
+        List<Setmeal> records = page.getRecords();
+        records.forEach(el->{
+            Category category = categoryService.getCategoryById(el.getCategoryId());
+            el.setCategoryName(category.getName());
+        });
         return R.success(page);
     }
 
@@ -152,6 +159,18 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         return R.success("删除套餐成功!");
     }
 
+    @Override
+    public R<List<Dish>> getSetmealDishs(String categoryId, String status) {
+        Setmeal setmeal = getSetmealByCategoryId(categoryId);
+        if(ObjUtil.isEmpty(setmeal)){
+            return R.error("没有查询到对应套餐下的菜品!");
+        }
+        List<SetmealDish> setmealDishes = setmealDishService.getBySetmealId(setmeal.getId());
+        List<String> list = setmealDishes.stream().map(SetmealDish::getDishId).collect(Collectors.toList());
+        List<Dish> dishes = dishService.listByIds(list);
+        return R.success(dishes);
+    }
+
     private LambdaQueryWrapper<Setmeal> queryWrapper(Setmeal setmeal) {
         LambdaQueryWrapper<Setmeal> query = Wrappers.lambdaQuery();
         if(ObjUtil.isNotEmpty(setmeal.getId())){
@@ -159,6 +178,11 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         }
         query.eq(Setmeal::getIsDeleted,0);
         return query;
+    }
+
+    private Setmeal getSetmealByCategoryId(String categoryId){
+        LambdaQueryWrapper<Setmeal> queryWrapper = Wrappers.lambdaQuery();
+        return this.getOne(queryWrapper.eq(Setmeal::getCategoryId,categoryId));
     }
 }
 

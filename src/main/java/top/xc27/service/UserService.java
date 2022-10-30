@@ -1,7 +1,10 @@
 package top.xc27.service;
 
+import top.xc27.common.R;
 import top.xc27.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
 * @author 17108
@@ -11,4 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface UserService extends IService<User> {
 
     User getUserByEmail(String email);
+
+    R<User> login(User user, HttpServletRequest request);
 }

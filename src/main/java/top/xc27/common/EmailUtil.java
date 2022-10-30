@@ -2,6 +2,7 @@ package top.xc27.common;
 
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
+import cn.hutool.core.util.ObjUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -38,17 +39,23 @@ public class EmailUtil {
         User one = userService.getUserByEmail(user.getEmail());
         LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 100);
         String text = lineCaptcha.getCode();
-        if(redisUtil.hasKey("code")){
+        if(redisUtil.hasKey(user.getEmail() + "code")){
             throw new MyRuntimeException("当前验证码还未失效,请检查垃圾箱或者被拦截邮件!");
         }
-        redisUtil.setString("code",text,120);
+        redisUtil.setString(user.getEmail() + "code",text,120);
+        System.out.println("text = " + text);
+        System.out.println(user.getEmail() + "code");
         // 创建一个邮件对象
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setFrom(username); // 设置发送人地址
         msg.setTo(user.getEmail()); // 设置接收方
         msg.setSubject("注册验证码"); // 设置邮件主题
-        msg.setText(one.getName() + ",你好:\n"  + "本次注册验证码是：" + text + "(有效期两分钟),请及时输入!"); // 设置邮件内容
+        if(ObjUtil.isNotEmpty(one)){
+            msg.setText(one.getName() + ",你好:\n"  + "本次注册验证码是：" + text + "(有效期两分钟),请及时输入!"); // 设置邮件内容
+        }else {
+            msg.setText("用户" + ",你好:\n"  + "本次注册验证码是：" + text + "(有效期两分钟),请及时输入!"); // 设置邮件内容
+        }
         // 发送邮件
-        mailSender.send(msg);
+//        mailSender.send(msg);
     }
 }

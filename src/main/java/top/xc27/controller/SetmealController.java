@@ -6,8 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import top.xc27.common.R;
+import top.xc27.entity.Dish;
 import top.xc27.entity.Setmeal;
 import top.xc27.service.SetmealService;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -40,6 +43,11 @@ public class SetmealController {
     @PostMapping("status")
     public R<String> editStatus(String ids,Integer status){
         return setmealService.editStatus(ids,status);
+    }
+
+    @GetMapping("list")
+    public R<List<Dish>> getSetmeals(String categoryId, String status){
+        return setmealService.getSetmealDishs(categoryId,status);
     }
 
     @DeleteMapping

@@ -64,8 +64,9 @@
                     if (regex.test(this.form.email)) {
                         this.msgFlag = false
                         axios.post('../../../user/getCode', this.form).then(res => {
-                            if(res.code === 1){
-                                this.$notify({ type:'warning', message:res.data.msg});
+                            console.log(res);
+                            if(res.data.code === 1){
+                                this.$notify({ type:'warning', message:res.data.data});
                             }else {
                                 this.$notify({ type:'warning', message:res.data.msg});
                             }
@@ -79,13 +80,11 @@
                         if(!this.form.code){
                             this.$notify({ type:'warning', message:'请输入验证码!'});
                         }else {
-                            console.log(this.form.email)
-                            console.log(this.form.code)
                             this.loading = true
                             axios.post('../../../user/login', this.form).then(res => {
                                 this.loading = false
-                                if(res.code === 1){
-                                    sessionStorage.setItem("userEmail",this.form.email)
+                                if(res.data.code === 1){
+                                    sessionStorage.setItem("userPhone",res.data.data.email)
                                     window.requestAnimationFrame(()=>{
                                         window.location.href= '/front/index.html'
                                     })
@@ -93,11 +92,9 @@
                                     this.$notify({ type:'warning', message:res.msg});
                                 }
                             })
-
-                            // const res = await loginApi({params})
                         }
                     }else{
-                        this.$notify({ type:'warning', message:'请输入登录邮箱!'});
+                        this.$notify({ type:'warning', message:'请输入手机号码'});
                     }
                 }
             }

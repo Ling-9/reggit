@@ -2,8 +2,11 @@ package top.xc27.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import top.xc27.common.R;
+import top.xc27.entity.Dish;
 import top.xc27.entity.Setmeal;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
 * @author 17108
@@ -23,4 +26,6 @@ public interface SetmealService extends IService<Setmeal> {
     R<String> editStatus(String ids, Integer status);
 
     R<String> deleteSetmeal(String ids);
+
+    R<List<Dish>> getSetmealDishs(String categoryId, String status);
 }

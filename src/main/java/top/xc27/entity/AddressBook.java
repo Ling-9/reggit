@@ -3,64 +3,89 @@ package top.xc27.entity;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
- * 套餐
- * @TableName setmeal
+ * 地址管理
+ * @TableName address_book
  */
-@TableName(value ="setmeal")
+@TableName(value ="address_book")
 @Data
-public class Setmeal extends BaseEntity implements Serializable {
+public class AddressBook implements Serializable {
     /**
      * 主键
      */
     @TableId
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
     /**
-     * 菜品分类id
+     * 用户id
      */
-    private Long categoryId;
+    private Long userId;
 
     /**
-     * 套餐名称
+     * 收货人
      */
-    private String name;
-
-    @TableField(exist = false)
-    private String categoryName;
+    private String consignee;
 
     /**
-     * 套餐价格
+     * 性别 0 女 1 男
      */
-    private BigDecimal price;
+    private Integer sex;
 
     /**
-     * 状态 0:停用 1:启用
+     * 手机号
      */
-    private Integer status;
+    private String phone;
 
     /**
-     * 编码
+     * 省级区划编号
      */
-    private String code;
+    private String provinceCode;
 
     /**
-     * 描述信息
+     * 省级名称
      */
-    private String description;
+    private String provinceName;
 
     /**
-     * 图片
+     * 市级区划编号
      */
-    private String image;
+    private String cityCode;
+
+    /**
+     * 市级名称
+     */
+    private String cityName;
+
+    /**
+     * 区级区划编号
+     */
+    private String districtCode;
+
+    /**
+     * 区级名称
+     */
+    private String districtName;
+
+    /**
+     * 详细地址
+     */
+    private String detail;
+
+    /**
+     * 标签
+     */
+    private String label;
+
+    /**
+     * 默认 0 否 1是
+     */
+    private Integer isDefault;
 
     /**
      * 创建时间
@@ -95,7 +120,4 @@ public class Setmeal extends BaseEntity implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
-
-    @TableField(exist = false)
-    private List<SetmealDish> setmealDishes;
 }
