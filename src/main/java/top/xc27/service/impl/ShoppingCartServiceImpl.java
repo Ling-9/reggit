@@ -1,6 +1,7 @@
 package top.xc27.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -12,6 +13,7 @@ import top.xc27.mapper.ShoppingCartMapper;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,8 +41,16 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
         }catch (Exception e){
             throw new MyRuntimeException("获取用户失败!");
         }
-        shoppingCart.setUserId(id);
-        this.save(shoppingCart);
+        ShoppingCart cart = getShoppingCartByDishId(shoppingCart.getDishId());
+        if(ObjUtil.isNotEmpty(cart)){
+            cart.setUserId(id);
+            Integer number = cart.getNumber();
+            cart.setNumber(++number);
+            this.updateById(cart);
+        }else {
+            shoppingCart.setUserId(id);
+            this.save(shoppingCart);
+        }
         return R.success("加入购物车成功!");
     }
 
@@ -56,10 +66,27 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
         return R.success("清除购物车成功!");
     }
 
-    private List<ShoppingCart> getShoppingCartsByUserId(Long id) {
+    @Override
+    public R<String> removeShoppingCart(ShoppingCart shoppingCart) {
+        if(ObjUtil.isNotEmpty(shoppingCart.getDishId())){
+            ShoppingCart dish = getShoppingCartByDishId(shoppingCart.getDishId());
+            Integer number = dish.getNumber();
+            dish.setNumber(--number);
+            this.updateById(dish);
+        }
+        return R.success("减少商品成功!");
+    }
+
+    public List<ShoppingCart> getShoppingCartsByUserId(Long id) {
         LambdaQueryWrapper<ShoppingCart> queryWrapper = Wrappers.lambdaQuery();
         LambdaQueryWrapper<ShoppingCart> wrapper = queryWrapper.eq(ShoppingCart::getUserId, id);
         return this.list(wrapper);
+    }
+
+    private ShoppingCart getShoppingCartByDishId(Long dishId){
+        LambdaQueryWrapper<ShoppingCart> queryWrapper = Wrappers.lambdaQuery();
+        LambdaQueryWrapper<ShoppingCart> wrapper = queryWrapper.eq(ShoppingCart::getDishId, dishId);
+        return this.getOne(wrapper);
     }
 
     private LambdaQueryWrapper<ShoppingCart> queryWrapper(ShoppingCart shoppingCart){

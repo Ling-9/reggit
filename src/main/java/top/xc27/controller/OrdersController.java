@@ -8,6 +8,8 @@ import top.xc27.common.R;
 import top.xc27.entity.Orders;
 import top.xc27.service.OrdersService;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Slf4j
 @RestController
 @RequestMapping("order")
@@ -21,4 +23,8 @@ public class OrdersController {
         return ordersService.getPage(orders);
     }
 
+    @PostMapping("submit")
+    public R<String> saveOrder(@RequestBody Orders orders, HttpServletRequest request) {
+        return ordersService.saveOrder(orders,request);
+    }
 }

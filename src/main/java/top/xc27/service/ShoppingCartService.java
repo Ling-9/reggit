@@ -19,4 +19,8 @@ public interface ShoppingCartService extends IService<ShoppingCart> {
     R<String> saveShoppingCart(ShoppingCart shoppingCart, HttpServletRequest request);
 
     R<String> deleteShoppingCart(HttpServletRequest request);
+
+    R<String> removeShoppingCart(ShoppingCart shoppingCart);
+
+    public List<ShoppingCart> getShoppingCartsByUserId(Long id);
 }

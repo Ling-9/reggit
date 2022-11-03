@@ -169,6 +169,10 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         }
         LambdaQueryWrapper<Dish> queryWrapper = queryWrapper(dish);
         List<Dish> list = this.list(queryWrapper);
+        list.forEach(el->{
+            List<DishFlavor> dishFlavors = dishFlavorService.getDishFlavorsById(el.getId());
+            el.setFlavors(dishFlavors);
+        });
         return R.success(list);
     }
 

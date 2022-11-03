@@ -1,8 +1,8 @@
 server:
   port: 8080
 minio:
-  endpoint: http://xc27.top:9090
-  access-key: admin
+  endpoint: ..
+  access-key: ..
   secret-key: ..
   imageBucketName: picture
   fileBucketName: file
@@ -13,7 +13,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://xc27.top:3306/reggie?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://localhost/reggie?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: root
       password: ..
       # 初始化时建立物理连接的个数
@@ -48,8 +48,8 @@ spring:
       connect-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
   redis:
     database: 0
-    host: xc27.top
-    port: 1234
+    host: ..
+    port: ..
     password: ..
     jedis:
       pool:
@@ -60,7 +60,7 @@ spring:
   mail:
     host: smtp.163.com
     port: 465
-    username: lingcglib@163.com
+    username: ..
     password: ..
     default-encoding: UTF-8
     properties:
@@ -73,7 +73,7 @@ spring:
           ssl:
             enable: true
             socketFactory:
-              port: 465
+              port: ..
               class: javax.net.ssl.SSLSocketFactory
 mybatis-plus:
   configuration:

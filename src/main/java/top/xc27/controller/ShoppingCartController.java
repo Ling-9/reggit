@@ -32,4 +32,9 @@ public class ShoppingCartController {
     public R<String> deleteShoppingCart(HttpServletRequest request){
         return shoppingCartService.deleteShoppingCart(request);
     }
+
+    @PostMapping("sub")
+    public R<String> removeShoppingCart(@RequestBody ShoppingCart shoppingCart){
+        return shoppingCartService.removeShoppingCart(shoppingCart);
+    }
 }
